@@ -5,12 +5,14 @@ import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import gitIcon from '../assets/Github-Logo.png';
+import { languageOptions } from '../utils/languageOptions';
+import { licenceOptions } from '../utils/licenceOptions';
 
 function MainPage() {
     const [title, setTitle] = useState('');
     const [tags, setTags] = useState<string[]>([]);
     const [languages, setLanguages] = useState<string[]>([]);
-    const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+    const [dateRange, setDateRange] = useState<[Date | null, Date | null] | undefined>(undefined);
     const [license, setLicense] = useState<string[]>([]);
     const [description, setDescription] = useState('');
 
@@ -39,7 +41,7 @@ function MainPage() {
             <div className="grid formgrid p-fluid">
                 <div className="col-12 md:col-3">
                     <label htmlFor="title">Title</label>
-                    <InputText id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <InputText id="title" placeholder="Enter repository title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 </div>
 
                 <div className="col-12 md:col-3">
@@ -50,6 +52,7 @@ function MainPage() {
                         options={dummyOptions}
                         onChange={(e) => setTags(e.value)}
                         placeholder="Select tags"
+                        filter
                     />
                 </div>
 
@@ -58,9 +61,10 @@ function MainPage() {
                     <MultiSelect
                         id="languages"
                         value={languages}
-                        options={dummyOptions}
+                        options={languageOptions}
                         onChange={(e) => setLanguages(e.value)}
                         placeholder="Select languages"
+                        filter
                     />
                 </div>
 
@@ -69,10 +73,11 @@ function MainPage() {
                     <Calendar
                         id="dateRange"
                         value={dateRange}
-                        onChange={(e) => setDateRange(e.value as [Date, Date])}
+                        onChange={(e) => setDateRange(e.value as [Date | null, Date | null])}
                         selectionMode="range"
                         readOnlyInput
                         placeholder="Select date range"
+                        showIcon
                     />
                 </div>
 
@@ -81,9 +86,10 @@ function MainPage() {
                     <MultiSelect
                         id="license"
                         value={license}
-                        options={dummyOptions}
+                        options={licenceOptions}
                         onChange={(e) => setLicense(e.value)}
                         placeholder="Select licenses"
+                        filter
                     />
                 </div>
 
