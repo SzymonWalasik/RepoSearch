@@ -7,6 +7,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import gitIcon from '../assets/Github-Logo.png';
 import { languageOptions } from '../utils/languageOptions';
 import { licenceOptions } from '../utils/licenceOptions';
+import { tagOptions } from '../utils/tagOptions';
 
 function MainPage() {
     const [title, setTitle] = useState('');
@@ -27,11 +28,6 @@ function MainPage() {
         });
     };
 
-    const dummyOptions = [
-        { label: 'Option 1', value: 'option1' },
-        { label: 'Option 2', value: 'option2' },
-    ];
-
     return (
         <div className="p-4" style={{ backgroundColor: 'white', minHeight: '100vh' }}>
             <div className="flex align-items-center mb-4">
@@ -49,7 +45,7 @@ function MainPage() {
                     <MultiSelect
                         id="tags"
                         value={tags}
-                        options={dummyOptions}
+                        options={tagOptions}
                         onChange={(e) => setTags(e.value)}
                         placeholder="Select tags"
                         filter
