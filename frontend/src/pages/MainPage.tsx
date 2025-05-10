@@ -8,6 +8,7 @@ import gitIcon from '../assets/Github-Logo.png';
 import { languageOptions } from '../utils/languageOptions';
 import { licenceOptions } from '../utils/licenceOptions';
 import { tagOptions } from '../utils/tagOptions';
+import RepositoryCard from '../components/RepositoryCard';
 
 function MainPage() {
     const [title, setTitle] = useState('');
@@ -16,6 +17,8 @@ function MainPage() {
     const [dateRange, setDateRange] = useState<[Date | null, Date | null] | undefined>(undefined);
     const [license, setLicense] = useState<string[]>([]);
     const [description, setDescription] = useState('');
+    const [results, setResults] = useState<any[]>([]);
+    const [isSearched, setIsSearched] = useState(false);
 
     const handleSearch = () => {
         fetch('http://localhost:8080/api/repositories/search', {
@@ -31,7 +34,11 @@ function MainPage() {
             }),
         })
             .then(res => res.json())
-            .then(data => console.log("Results:", data))
+            .then(data => {
+                setResults(data);
+                setIsSearched(true);
+            })
+            .catch(error => console.error('Error fetching search results:', error));
     };
 
     return (
@@ -108,11 +115,27 @@ function MainPage() {
                 <div className="col-12 mt-3" style={{ margin: '0 auto' }}>
                     <Button
                         label="Search"
-                        className="w-full"
-                        style={{ backgroundColor: 'black', border: 'none' }}
+                        style={{ backgroundColor: 'black', border: 'none', borderRadius: '8px' }}
                         onClick={handleSearch}
                     />
                 </div>
+                {isSearched && (
+                    <>
+                        <div className="overflow-y-auto max-h-[70vh] pr-2 mt-4">
+                            {results.length > 0 ? (
+                                results.map((repo, index) => (
+                                    <RepositoryCard key={index} repo={repo} />
+                                ))
+                            ) : (
+                                <div>No results found</div>
+                            )}
+                        </div>
+
+                        <div className="mt-4 text-sm text-gray-600">
+                            Total results: {results.length}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
