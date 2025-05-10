@@ -35,9 +35,9 @@ public class RepositorySearchService {
         }
 
         if (request.getTags() != null && !request.getTags().isEmpty()) {
-            mustQueries.add(TermsQuery.of(t -> t.field("topics.keyword").terms(terms -> terms.value(request.getTags().stream()
-                    .map(FieldValue::of)
-                    .collect(toList()))))._toQuery());
+            for (String tag : request.getTags()) {
+                mustQueries.add(MatchQuery.of(m -> m.field("topics").query(tag))._toQuery());
+            }
         }
 
         if (request.getLanguages() != null && !request.getLanguages().isEmpty()) {
@@ -77,7 +77,7 @@ public class RepositorySearchService {
 
         return response.hits().hits().stream().map(hit -> {
             Map source = hit.source();
-            
+
             List<String> topics = new ArrayList<>();
             Object topicsRaw = source.get("topics");
             if (topicsRaw instanceof String) {
