@@ -18,14 +18,20 @@ function MainPage() {
     const [description, setDescription] = useState('');
 
     const handleSearch = () => {
-        console.log({
-            title,
-            tags,
-            languages,
-            dateRange,
-            license,
-            description
-        });
+        fetch('http://localhost:8080/api/repositories/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title,
+                description,
+                tags,
+                languages,
+                license,
+                dateRange
+            }),
+        })
+            .then(res => res.json())
+            .then(data => console.log("Results:", data))
     };
 
     return (
