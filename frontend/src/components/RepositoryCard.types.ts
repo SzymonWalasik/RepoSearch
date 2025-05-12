@@ -7,5 +7,7 @@ export interface RepositoryCardProps {
         url: string;
         createdAt: string;
         tags: string[];
+        stars: number;
+        forks: number;
     };
 }

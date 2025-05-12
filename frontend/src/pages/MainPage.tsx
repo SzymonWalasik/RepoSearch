@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
+import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -9,6 +10,7 @@ import { languageOptions } from '../utils/languageOptions';
 import { licenceOptions } from '../utils/licenceOptions';
 import { tagOptions } from '../utils/tagOptions';
 import RepositoryCard from '../components/RepositoryCard';
+import { sortOptions } from '../utils/sortOptions';
 
 function MainPage() {
     const [title, setTitle] = useState('');
@@ -19,6 +21,7 @@ function MainPage() {
     const [description, setDescription] = useState('');
     const [results, setResults] = useState<any[]>([]);
     const [isSearched, setIsSearched] = useState(false);
+    const [sortOption, setSortOption] = useState<string>('date_desc');
 
     const handleSearch = () => {
         fetch('http://localhost:8080/api/repositories/search', {
@@ -40,6 +43,25 @@ function MainPage() {
             })
             .catch(error => console.error('Error fetching search results:', error));
     };
+
+    const sortedResults = [...results].sort((a, b) => {
+        switch (sortOption) {
+            case 'date_desc':
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            case 'date_asc':
+                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+            case 'stars_desc':
+                return b.stars - a.stars;
+            case 'stars_asc':
+                return a.stars - b.stars;
+            case 'forks_desc':
+                return b.forks - a.forks;
+            case 'forks_asc':
+                return a.forks - b.forks;
+            default:
+                return 0;
+        }
+    });
 
     return (
         <div className="p-4" style={{ backgroundColor: 'white', minHeight: '100vh' }}>
@@ -121,18 +143,27 @@ function MainPage() {
                 </div>
                 {isSearched && (
                     <>
-                        <div className="overflow-y-auto max-h-[70vh] pr-2 mt-4">
-                            {results.length > 0 ? (
-                                results.map((repo, index) => (
+                        <div className="m-4 flex gap-5">
+                            <label>Total results: {sortedResults.length}</label>
+                            <div>
+                                <label htmlFor="sort">Sort by:</label>
+                                <Dropdown
+                                    id="sort"
+                                    value={sortOption}
+                                    options={sortOptions}
+                                    onChange={(e) => setSortOption(e.value)}
+                                    placeholder="Sort by"
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full">
+                            {sortedResults.length > 0 ? (
+                                sortedResults.map((repo, index) => (
                                     <RepositoryCard key={index} repo={repo} />
                                 ))
                             ) : (
-                                <div>No results found</div>
+                                <div className="text-center">No results found</div>
                             )}
-                        </div>
-
-                        <div className="mt-4 text-sm text-gray-600">
-                            Total results: {results.length}
                         </div>
                     </>
                 )}

@@ -1,10 +1,21 @@
 import React from 'react';
+import 'primeicons/primeicons.css';
 import '../components/repositoryCard.css'
 import { RepositoryCardProps } from './RepositoryCard.types';
 
 const RepositoryCard: React.FC<RepositoryCardProps> = ({ repo }) => {
     return (
         <div className="repository-card">
+            <div className="repo-stats">
+                <div>
+                    <i className="pi pi-star" style={{ marginRight: '5px', color: '#f1c40f' }}></i>
+                    {repo.stars ?? 0}
+                </div>
+                <div>
+                    <i className="pi pi-share-alt" style={{ marginRight: '5px', color: '#aaa' }}></i>
+                    {repo.forks ?? 0}
+                </div>
+            </div>
             <h2>Repository name: {repo.name}</h2>
             <p>Description: {repo.description}</p>
 
