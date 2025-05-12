@@ -55,6 +55,7 @@ const RepositoryCard: React.FC<RepositoryCardProps> = ({ repo }) => {
             <div className="footer">
                 <p>Size of repository: {repo.size}kB</p>
                 <p>Created on: {new Date(repo.createdAt).toLocaleDateString()}</p>
+                <p>Updated at: {new Date(repo.updatedAt).toLocaleDateString()}</p>
                 <a href={repo.url} target="_blank" rel="noopener noreferrer">Go to Repository</a>
             </div>
         </div>

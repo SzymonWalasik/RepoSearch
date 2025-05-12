@@ -6,6 +6,7 @@ export interface RepositoryCardProps {
         license: string;
         url: string;
         createdAt: string;
+        updatedAt: string;
         tags: string[];
         stars: number;
         forks: number;
