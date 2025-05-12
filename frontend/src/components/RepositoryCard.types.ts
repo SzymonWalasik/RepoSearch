@@ -9,5 +9,7 @@ export interface RepositoryCardProps {
         tags: string[];
         stars: number;
         forks: number;
+        issues: number;
+        size: number;
     };
 }

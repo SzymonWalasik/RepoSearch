@@ -15,6 +15,10 @@ const RepositoryCard: React.FC<RepositoryCardProps> = ({ repo }) => {
                     <i className="pi pi-share-alt" style={{ marginRight: '5px', color: '#aaa' }}></i>
                     {repo.forks ?? 0}
                 </div>
+                <div>
+                    <i className="pi pi-exclamation-circle" style={{ marginRight: '5px', color: '#e74c3c' }}></i>
+                    {repo.issues ?? 0}
+                </div>
             </div>
             <h2>Repository name: {repo.name}</h2>
             <p>Description: {repo.description}</p>
@@ -49,6 +53,7 @@ const RepositoryCard: React.FC<RepositoryCardProps> = ({ repo }) => {
             </div>
 
             <div className="footer">
+                <p>Size of repository: {repo.size}kB</p>
                 <p>Created on: {new Date(repo.createdAt).toLocaleDateString()}</p>
                 <a href={repo.url} target="_blank" rel="noopener noreferrer">Go to Repository</a>
             </div>
