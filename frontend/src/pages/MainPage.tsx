@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
+import { Paginator } from 'primereact/paginator';
 import { MultiSelect } from 'primereact/multiselect';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
@@ -22,6 +23,8 @@ function MainPage() {
     const [results, setResults] = useState<any[]>([]);
     const [isSearched, setIsSearched] = useState(false);
     const [sortOption, setSortOption] = useState<string>('date_desc');
+    const [first, setFirst] = useState(0);
+    const [rows, setRows] = useState(10);
 
     const handleSearch = () => {
         fetch('http://localhost:8080/api/repositories/search', {
@@ -40,6 +43,7 @@ function MainPage() {
             .then(data => {
                 setResults(data);
                 setIsSearched(true);
+                setFirst(0);
             })
             .catch(error => console.error('Error fetching search results:', error));
     };
@@ -62,6 +66,13 @@ function MainPage() {
                 return 0;
         }
     });
+
+    const onPageChange = (event: { first: number; rows: number }) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+
+    const paginatedResults = sortedResults.slice(first, first + rows);
 
     return (
         <div className="p-4" style={{ backgroundColor: 'white', minHeight: '100vh' }}>
@@ -157,13 +168,22 @@ function MainPage() {
                             </div>
                         </div>
                         <div className="w-full">
-                            {sortedResults.length > 0 ? (
-                                sortedResults.map((repo, index) => (
+                            {paginatedResults.length > 0 ? (
+                                paginatedResults.map((repo, index) => (
                                     <RepositoryCard key={index} repo={repo} />
                                 ))
                             ) : (
                                 <div className="text-center">No results found</div>
                             )}
+                        </div>
+                        <div className="col-12 mt-4">
+                            <Paginator
+                                first={first}
+                                rows={rows}
+                                totalRecords={sortedResults.length}
+                                onPageChange={onPageChange}
+                                rowsPerPageOptions={[10, 20, 30]}
+                            />
                         </div>
                     </>
                 )}
