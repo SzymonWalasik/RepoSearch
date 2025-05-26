@@ -1,13 +1,11 @@
-version: "3.8"
-
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # Ograniczamy pamięć dla testów
-      - xpack.security.enabled=false # Wyłączamy uwierzytelnianie
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
     ports:
       - "9200:9200"
     volumes:
@@ -15,9 +13,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2g # Ograniczenie pamięci dla kontenera
+          memory: 2g
         reservations:
-          memory: 2g # Minimalna ilość pamięci rezerwowana
+          memory: 2g
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.8.0
@@ -26,6 +24,28 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+
+  data_index:
+    container_name: data_index
+    build: ./app
+    depends_on:
+      - elasticsearch
+
+  backend:
+    container_name: backend
+    ports:
+      - "8080:8080"
+    build: ./backend
+    depends_on:
+      - data_index
+
+  frontend:
+    container_name: frontend
+    ports:
+      - "80:80"
+    build: ./frontend
+    depends_on:
+      - backend
 
 volumes:
   es_data:

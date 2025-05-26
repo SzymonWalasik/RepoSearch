@@ -5,9 +5,12 @@ from elasticsearch.helpers import bulk, BulkIndexError
 INDEX_NAME = "repositories"
 
 # Ładowanie danych z CSV
-df = pd.read_csv("../data/repositories.csv")
+df = pd.read_csv("./repositories.csv")
 
-es = Elasticsearch("http://localhost:9200")
+es = Elasticsearch(
+    "http://localhost:9200",
+    verify_certs=False
+)
 
 import numpy as np
 import json
@@ -23,7 +26,7 @@ def doc_generator(df):
     for index, row in df.iterrows():
         doc = {
             "_index": INDEX_NAME,
-            "_id": str(clean_value(row["Name"])),  # Można użyć 'Name' jako identyfikator
+            "_id": str(clean_value(row["Name"])),
             "_source": {
                 "name": clean_value(row["Name"]),
                 "description": clean_value(row["Description"]),
