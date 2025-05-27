@@ -13,7 +13,6 @@ es = Elasticsearch(
 )
 
 import numpy as np
-import json
 
 def clean_value(value):
     """Replace NaN values with None for Elasticsearch compatibility."""

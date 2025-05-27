@@ -45,7 +45,7 @@ services:
       - "80:80"
     build: ./frontend
     depends_on:
-      - backend
+      - elasticsearch
 
 volumes:
   es_data:
