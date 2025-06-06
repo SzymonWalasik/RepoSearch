@@ -30,8 +30,6 @@ services:
     ports:
       - "8080:8080"
     build: ./backend
-    depends_on:
-      - data_index
 
   frontend:
     container_name: frontend
